@@ -453,23 +453,31 @@ public:
     //Wrapper Function
     void insert(T d)
     {
-        two3node<T>* p = root;                  //Parent Pointer (Will be used for rotation purposes)
+        T temp = search(d);
 
-        usefulData<T> s1 = insert(root, d, p);
-
-        if (s1.child != NULL)               //The case when the result of the split reaches the root and root itself is to be splitted
+        if (temp != d)
         {
-            two3node<T> * temp = new two3node<T>;
+            two3node<T>* p = root;                  //Parent Pointer (Will be used for rotation purposes)
 
-            temp -> k1 = s1.midValue;
-            temp -> n  = 1;
+            usefulData<T> s1 = insert(root, d, p);
 
-            temp -> left = root;
-            temp -> middle  = s1.child;
+            if (s1.child != NULL)               //The case when the result of the split reaches the root and root itself is to be splitted
+            {
+                two3node<T> * temp = new two3node<T>;
 
-            temp -> right = NULL;
-            root = temp;
+                temp -> k1 = s1.midValue;
+                temp -> n  = 1;
+
+                temp -> left = root;
+                temp -> middle  = s1.child;
+
+                temp -> right = NULL;
+                root = temp;
+            }
         }
+
+        else
+            cout <<"\nThe current item " << d << " is already present.";
     }
 
 
@@ -876,8 +884,12 @@ public:
                     temp    = r -> k2;
                     current = r -> middle;
 
+                    p = r;
+
                     while (current -> left != NULL)     //Because predecessor is always in a leaf node
                     {
+                        p = current;
+
                         if (current -> n == 1)
                         {
                             current = current -> middle;    //If current is a 2 node then move towards its middle
@@ -901,16 +913,16 @@ public:
                             r -> k2       = current -> k2;
                             current -> k2 = temp;
                         }
-                    }
+                 }
 
 
-                    else                        //If the key to be deleted is k1 then the processing is the same irrespective
-                                                //of the fact whether r is a 2 node or a 3 node
-                    {
-                        temp    = r -> k1;
-                        current = r -> left;
+                else                        //If the key to be deleted is k1 then the processing is the same irrespective
+                                            //of the fact whether r is a 2 node or a 3 node
+                {
+                    temp    = r -> k1;
+                    current = r -> left;
 
-                        p = r;
+                    p = r;
 
                         while (current -> left != NULL)     //Because predecessor is always in a leaf node
                         {
@@ -939,7 +951,7 @@ public:
                             r -> k1       = current -> k2;
                             current -> k2 = temp;
                         }
-                    }
+                }
 
                     current -> n--;             //Deleting that key value
                     r = current;
@@ -1116,7 +1128,7 @@ public:
 
     void displayFunctions()
     {
-        cout << "\n\n\nThis class 2-3 Tree has the following functionality : ";
+        cout << "\n\n\nThis class 2 3 Tree has the following functionality : ";
         cout << "\n1)Insert \n2)Delete \n3)Search \n4)Print\n\n";
         cout << "\nEnter the option number. To exit, enter -1.\nOption Number : ";
     }
