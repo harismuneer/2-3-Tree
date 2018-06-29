@@ -63,6 +63,8 @@ struct usefulData
 
 
 
+
+
 /*-------------------------2 3 Tree-------------------------*/
 template <class T>
 class two3Tree
@@ -204,7 +206,7 @@ public:
                           return 1;           // 1 indicates clockwise(right) rotation is to be done
                     }
 
-                    else // p-> right == r
+                    else
                     {
                        if (p -> middle -> n == 1)
                           return 2;           // 2 indicates anti-clockwise(left) rotation is to be done
@@ -252,7 +254,6 @@ public:
                 //Updating Pointers
 
                 p -> middle -> left = p -> left -> right;
-                //p -> left -> right = NULL;   //Extra Line
             }
         }
 
@@ -451,9 +452,9 @@ public:
 
     //Main Insert Function
     //Wrapper Function
-    void insert(T d)
+    bool insert(T d)
     {
-        T temp = search(d);
+        T temp = searchFor(d);
 
         if (temp != d)
         {
@@ -474,10 +475,14 @@ public:
                 temp -> right = NULL;
                 root = temp;
             }
+
+            return true;
         }
 
         else
-            cout <<"\nThe current item " << d << " is already present.";
+            cout << "\nThe current item is already present.\n";
+
+        return false;
     }
 
 
@@ -902,18 +907,18 @@ public:
                     }
 
 
-                        if (current -> n == 1)              //If predecessor is in a 2 node
-                        {
-                            r -> k2       = current -> k1;
-                            current -> k1 = temp;
-                        }
+                    if (current -> n == 1)              //If predecessor is in a 2 node
+                    {
+                        r -> k2       = current -> k1;
+                        current -> k1 = temp;
+                    }
 
-                        else                                //If predecesoor is in a 3 node
-                        {
-                            r -> k2       = current -> k2;
-                            current -> k2 = temp;
-                        }
-                 }
+                    else                                //If predecesoor is in a 3 node
+                    {
+                        r -> k2       = current -> k2;
+                        current -> k2 = temp;
+                    }
+                }
 
 
                 else                        //If the key to be deleted is k1 then the processing is the same irrespective
@@ -924,45 +929,44 @@ public:
 
                     p = r;
 
-                        while (current -> left != NULL)     //Because predecessor is always in a leaf node
+                    while (current -> left != NULL)     //Because predecessor is always in a leaf node
+                    {
+                        p = current;
+
+                        if (current -> n == 1)          //If current is a 2 node then move towards its middle
                         {
-                            p = current;
-
-                            if (current -> n == 1)          //If current is a 2 node then move towards its middle
-                            {
-                                current = current -> middle;
-                            }
-
-                            else                            //If current is a 3 node then move towards its right
-                            {
-                                current = current -> right;
-                            }
+                           current = current -> middle;
                         }
 
-
-                        if (current -> n == 1)  //Predecessor is in a 2 node
+                        else                            //If current is a 3 node then move towards its right
                         {
-                            r -> k1       = current -> k1;
-                            current -> k1 = temp;
+                            current = current -> right;
                         }
+                    }
 
-                        else if (current -> n == 2) //Predecessor is in a 3 node
-                        {
-                            r -> k1       = current -> k2;
-                            current -> k2 = temp;
-                        }
+
+                    if (current -> n == 1)  //Predecessor is in a 2 node
+                    {
+                        r -> k1       = current -> k1;
+                        current -> k1 = temp;
+                    }
+
+                    else if (current -> n == 2) //Predecessor is in a 3 node
+                    {
+                        r -> k1       = current -> k2;
+                        current -> k2 = temp;
+                    }
                 }
 
                     current -> n--;             //Deleting that key value
                     r = current;
-                }
+            }
 
 
                 //CASE 2 When key from leaf node is to be deleted
 
                 else if ((r -> left == NULL) && ( (r -> k1 == d) || (r -> k2 == d) ))     //r is a Leaf node, Simply delete
                 {
-
                     if (r -> n == 2)           //r is a 3 node
                     {
                         if (r -> k1 == d)       //k1 is to be deleted
@@ -1101,10 +1105,7 @@ public:
     //Recursive Function
     void print (two3node<T>* r)
     {
-        if (root == NULL)
-            cout << "\nThe tree is empty.";
-
-        else if(r != NULL)
+        if(r != NULL)
         {
             if (r -> n == 1)        //Two Node
             {
@@ -1122,6 +1123,9 @@ public:
                 print (r -> right);
             }
         }
+
+        else
+            cout << "\nThe tree is empty.";
     }
 
 
